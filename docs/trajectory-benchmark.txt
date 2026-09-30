@@ -1,0 +1,19 @@
+16 voices, 48 kHz; 200 callbacks; measured deadline misses, device underruns unmeasured
+AVX2, 4096, changing trajectories, 128: mean 14.8365 ms, max 24.0159 ms, load 556.37%, misses 200/200
+AVX2, 4096, changing trajectories, 256: mean 29.4121 ms, max 59.1544 ms, load 551.476%, misses 200/200
+AVX2, 4096, changing trajectories, 512: mean 59.0142 ms, max 109.588 ms, load 553.259%, misses 200/200
+AVX2, 4096, loop overlap, 128: mean 28.6482 ms, max 37.9518 ms, load 1074.31%, misses 200/200
+AVX2, 4096, loop overlap, 256: mean 45.9738 ms, max 60.4049 ms, load 862.01%, misses 200/200
+AVX2, 4096, loop overlap, 512: mean 77.8861 ms, max 113.318 ms, load 730.182%, misses 200/200
+AVX2, 1024, changing trajectories, 128: mean 3.74414 ms, max 5.0032 ms, load 140.405%, misses 200/200
+AVX2, 1024, changing trajectories, 256: mean 7.97012 ms, max 15.6447 ms, load 149.44%, misses 200/200
+AVX2, 1024, changing trajectories, 512: mean 16.6004 ms, max 32.3763 ms, load 155.629%, misses 200/200
+AVX2, 1024, loop overlap, 128: mean 8.03305 ms, max 11.9917 ms, load 301.239%, misses 200/200
+AVX2, 1024, loop overlap, 256: mean 11.4329 ms, max 20.6334 ms, load 214.367%, misses 200/200
+AVX2, 1024, loop overlap, 512: mean 20.3586 ms, max 32.9962 ms, load 190.862%, misses 200/200
+AVX2, 256, changing trajectories, 128: mean 1.04645 ms, max 1.5291 ms, load 39.2419%, misses 0/200
+AVX2, 256, changing trajectories, 256: mean 2.15753 ms, max 4.3272 ms, load 40.4537%, misses 0/200
+AVX2, 256, changing trajectories, 512: mean 4.40135 ms, max 9.4024 ms, load 41.2627%, misses 0/200
+AVX2, 256, loop overlap, 128: mean 1.9828 ms, max 3.4266 ms, load 74.3552%, misses 3/200
+AVX2, 256, loop overlap, 256: mean 2.94284 ms, max 5.5314 ms, load 55.1783%, misses 1/200
+AVX2, 256, loop overlap, 512: mean 4.90407 ms, max 6.547 ms, load 45.9757%, misses 0/200

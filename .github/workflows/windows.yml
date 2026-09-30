@@ -1,0 +1,25 @@
+name: Windows VST3
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake --preset windows-release
+      - name: Build
+        run: cmake --build --preset windows-release
+      - name: Test
+        run: ctest --preset windows-release
+      - name: Benchmark (informational)
+        run: |
+          .\build\Release\synth_benchmark.exe
+          .\build\Release\trajectory_benchmark.exe
+      - name: Package binary and corresponding source
+        shell: pwsh
+        run: |
+          ./scripts/package.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sineweave-Windows-x64-VST3
+          path: build/releases/Sineweave-Windows-x64-VST3.zip

@@ -1,0 +1,20 @@
+{
+  "version": 5,
+  "configurePresets": [
+    {"name": "windows-release", "displayName": "Windows x64 Release", "generator": "Visual Studio 17 2022", "architecture": "x64", "binaryDir": "${sourceDir}/build", "cacheVariables": {"SINEWEAVE_BUILD_PLUGIN": "ON", "SINEWEAVE_BUILD_TESTS": "ON"}},
+    {"name": "windows-debug", "inherits": "windows-release", "binaryDir": "${sourceDir}/build/debug"},
+    {"name": "core-only", "inherits": "windows-release", "binaryDir": "${sourceDir}/build/core-only", "cacheVariables": {"SINEWEAVE_BUILD_PLUGIN": "OFF"}},
+    {"name": "loris-cli", "inherits": "windows-release", "binaryDir": "${sourceDir}/build/loris-cli", "cacheVariables": {"SINEWEAVE_BUILD_PLUGIN": "OFF", "SINEWEAVE_BUILD_TESTS": "OFF", "SINEWEAVE_BUILD_LORIS_TOOLS": "ON"}}
+  ],
+  "buildPresets": [
+    {"name": "windows-release", "configurePreset": "windows-release", "configuration": "Release", "jobs": 4},
+    {"name": "windows-debug", "configurePreset": "windows-debug", "configuration": "Debug", "jobs": 4},
+    {"name": "core-only", "configurePreset": "core-only", "configuration": "Release", "jobs": 4},
+    {"name": "loris-cli", "configurePreset": "loris-cli", "configuration": "Release", "targets": ["loris_cli"], "jobs": 4}
+  ],
+  "testPresets": [
+    {"name": "windows-release", "configurePreset": "windows-release", "configuration": "Release", "output": {"outputOnFailure": true}},
+    {"name": "windows-debug", "configurePreset": "windows-debug", "configuration": "Debug", "output": {"outputOnFailure": true}},
+    {"name": "core-only", "configurePreset": "core-only", "configuration": "Release", "output": {"outputOnFailure": true}}
+  ]
+}
