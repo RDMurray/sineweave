@@ -1,7 +1,7 @@
 # Sineweave
 
-Sineweave is a Windows VST3 instrument that turns an audio sample into a playable
-sound. Hold a moment from the sample, or play through its changing tone at a
+Sineweave is a Windows VST3 instrument that resynthesises an audio sample with
+sine waves. Hold a moment from the sample, or play through its changing tone at a
 speed you choose. MIDI notes control the pitch independently of playback speed.
 
 ## Install
@@ -60,7 +60,7 @@ and crossfade apply to new notes.
 
 ## Keyboard and screen readers
 
-Use Tab and Shift+Tab to move between controls, Space to activate buttons, and
+Use Tab and Shift+Tab to move between controls, Enter to activate buttons, and
 arrow keys to change values or selections. On a numeric slider, press Enter or
 F2, type a value, and press Enter to apply it. Escape cancels the edit.
 **Analysis status** is a focusable, read-only field for checking progress and
