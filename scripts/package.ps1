@@ -1,4 +1,7 @@
-param([string]$BuildDirectory = (Join-Path $PSScriptRoot '../build'))
+param(
+    [string]$BuildDirectory = (Join-Path $PSScriptRoot '../build'),
+    [string]$IsccPath = 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
+)
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $buildRoot = [IO.Path]::GetFullPath($BuildDirectory)
@@ -30,5 +33,29 @@ foreach ($name in @('JUCE', 'LORIS')) {
 }
 $archive = Join-Path $releaseRoot 'Sineweave-Windows-x64-VST3.zip'
 Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $archive -Force
+if (!(Test-Path -LiteralPath $IsccPath)) { throw 'Install Inno Setup 6 or supply -IsccPath.' }
+$redist = Join-Path $buildRoot 'vc_redist.x64.exe'
+Invoke-WebRequest 'https://aka.ms/vs/17/release/vc_redist.x64.exe' -OutFile $redist
+$signature = Get-AuthenticodeSignature -LiteralPath $redist
+if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation,') {
+    throw 'The VC++ redistributable does not have a valid Microsoft signature.'
+}
+$runtimeVersion = (Get-Item -LiteralPath $redist).VersionInfo
+$versionLine = $cache | Where-Object { $_ -match '^CMAKE_PROJECT_VERSION:STATIC=' }
+$version = ($versionLine -split '=', 2)[1]
+$commitSha = (& git -C $projectRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0) { throw 'Cannot determine source commit.' }
+& $IsccPath "/DAppVersion=$version" "/DCommitSha=$commitSha" "/DStageDir=$stage" "/DOutputDir=$releaseRoot" "/DRedistPath=$redist" `
+    "/DRedistMajor=$($runtimeVersion.FileMajorPart)" "/DRedistMinor=$($runtimeVersion.FileMinorPart)" `
+    "/DRedistBuild=$($runtimeVersion.FileBuildPart)" "/DRedistRevision=$($runtimeVersion.FilePrivatePart)" `
+    (Join-Path $PSScriptRoot 'installer.iss')
+if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
+$installer = Join-Path $releaseRoot 'Sineweave-Windows-x64-Setup.exe'
+$checksums = foreach ($asset in @($installer, $archive)) {
+    $hash = Get-FileHash -LiteralPath $asset -Algorithm SHA256
+    "$($hash.Hash.ToLowerInvariant())  $([IO.Path]::GetFileName($asset))"
+}
+$checksums | Set-Content -LiteralPath (Join-Path $releaseRoot 'SHA256SUMS.txt') -Encoding ascii
 Write-Output $archive
+Write-Output $installer
 $global:LASTEXITCODE = 0

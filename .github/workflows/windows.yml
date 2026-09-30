@@ -1,5 +1,7 @@
 name: Windows VST3
 on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: windows-2022
@@ -18,8 +20,40 @@ jobs:
       - name: Package binary and corresponding source
         shell: pwsh
         run: |
+          if (!(Test-Path 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe')) {
+            choco install innosetup --version=6.5.4 --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { throw 'Inno Setup installation failed.' }
+          }
           ./scripts/package.ps1
+      - name: Verify installer installation, upgrade and uninstall
+        shell: pwsh
+        run: ./scripts/test-installer.ps1
       - uses: actions/upload-artifact@v4
         with:
           name: Sineweave-Windows-x64-VST3
-          path: build/releases/Sineweave-Windows-x64-VST3.zip
+          if-no-files-found: error
+          path: |
+            build/releases/Sineweave-Windows-x64-VST3.zip
+            build/releases/Sineweave-Windows-x64-Setup.exe
+            build/releases/SHA256SUMS.txt
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: main-installer-releases
+      cancel-in-progress: false
+      queue: max
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Sineweave-Windows-x64-VST3
+          path: release-assets
+      - name: Publish commit release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/release.ps1 -AssetDirectory release-assets

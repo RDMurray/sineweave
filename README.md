@@ -6,6 +6,26 @@ follows the changing trajectories with independent speed and MIDI pitch.
 Inharmonic frequencies are preserved: a 613.7 Hz partial at reference A4 becomes
 1227.4 Hz at A5. Project code is **AGPLv3**.
 
+## Install on Windows
+
+[Download the latest Windows x64 installer](https://github.com/RDMurray/sineweave/releases/latest/download/Sineweave-Windows-x64-Setup.exe)
+
+Run the installer with administrator permission, then rescan plugins in your
+audio host. It installs the complete bundle into
+`C:\Program Files\Common Files\VST3\Sineweave.vst3` and documentation/licences into
+`C:\Program Files\Sineweave`. Close your audio host before installing an update.
+Run the newer installer to upgrade; remove Sineweave through Windows Installed
+Apps to uninstall. The shared Microsoft VC++ runtime is retained.
+
+The installer includes the Microsoft VC++ x64 runtime for offline installation.
+Sineweave's installer is unsigned; Windows may display an unknown-publisher or
+SmartScreen prompt. Windows 10/11 x64 is the supported target.
+
+Every passing push to `main` publishes a separate
+[GitHub release](https://github.com/RDMurray/sineweave/releases) with the installer,
+a portable ZIP including corresponding project/dependency source, and SHA-256
+checksums. The download above follows the newest successfully released commit.
+
 ## Build on Windows
 
 Install Visual Studio 2022 with **Desktop development with C++**, a Windows SDK,
@@ -25,7 +45,8 @@ Builds do not install into system directories. Add its parent directory to
 REAPER's VST scan paths, or manually copy the **whole bundle** into your VST3
 directory, then rescan. The Microsoft VC++ runtime may be required on another
 machine. CI produces a Windows x64 bundle with licences and notices.
-Run `./scripts/package.ps1` to package the bundle, documentation, licences,
+Install Inno Setup 6, then run `./scripts/package.ps1` to produce the installer
+and package the bundle, documentation, licences,
 and corresponding source (including the pinned dependency source). From the
 archive's `Source` directory, use local paths `third_party/JUCE` and
 `third_party/LORIS` with the CMake options below to build without fetching.
