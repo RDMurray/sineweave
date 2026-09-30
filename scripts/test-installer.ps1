@@ -7,6 +7,7 @@ $installedBundle = Join-Path $env:CommonProgramFiles 'VST3/Sineweave.vst3'
 $appDirectory = Join-Path $env:ProgramFiles 'Sineweave'
 $sourceBundle = [IO.Path]::GetFullPath((Join-Path $BuildDirectory 'Sineweave_artefacts/Release/VST3/Sineweave.vst3'))
 $sentinel = Join-Path $env:CommonProgramFiles 'VST3/sineweave-ci-unrelated.txt'
+New-Item -ItemType Directory -Path (Split-Path -Parent $sentinel) -Force | Out-Null
 Set-Content -LiteralPath $sentinel -Value 'Preserve unrelated plugins'
 try {
     foreach ($attempt in 1..2) {
