@@ -13,7 +13,6 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 MinVersion=10.0
-LicenseFile={#StageDir}\LICENSE
 OutputDir={#OutputDir}
 OutputBaseFilename=Sineweave-Windows-x64-Setup
 Compression=lzma2

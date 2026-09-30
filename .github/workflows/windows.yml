@@ -1,5 +1,24 @@
 name: Windows VST3
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'cmake/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/windows.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'cmake/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/windows.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -13,10 +32,6 @@ jobs:
         run: cmake --build --preset windows-release
       - name: Test
         run: ctest --preset windows-release
-      - name: Benchmark (informational)
-        run: |
-          .\build\Release\synth_benchmark.exe
-          .\build\Release\trajectory_benchmark.exe
       - name: Package binary and corresponding source
         shell: pwsh
         run: |
